@@ -83,7 +83,7 @@
       formData.append("file", fileInput.files[0]);
   
       try {
-        const response = await fetch("http://localhost:3000/convert_txt", {
+        const response = await fetch("https://jsonconverter-eqig.onrender.com/convert_txt", {
           method: "POST",
           body: formData
         });

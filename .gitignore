@@ -1,0 +1,17 @@
+# Ignora o diretório de dependências do Node.js
+node_modules/
+
+# Ignora o diretório de resultados
+Results/
+
+# Ignora o diretório com arquivos txt
+txts/
+
+# Ignora o ambiente virtual Python
+venv/
+
+# Ignora arquivos de configuração e segurança
+.env
+
+# Ignora arquivos gerados automaticamente
+package-lock.json

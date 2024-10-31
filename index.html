@@ -83,7 +83,7 @@
       formData.append("file", fileInput.files[0]);
   
       try {
-        const response = await fetch("https://jsonconverter-eqig.onrender.com/convert_txt", {
+        const response = await fetch("/convert_txt", {  // Caminho relativo para compatibilidade em produção e local
           method: "POST",
           body: formData
         });
@@ -97,8 +97,7 @@
         document.getElementById("response").innerText = `Erro ao processar a solicitação: ${error.message}`;
       }
     });
-  </script>
-
+</script>
 
 </body>
 </html>

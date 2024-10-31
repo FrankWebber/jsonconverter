@@ -1,4 +1,6 @@
+// server.js
 import express from 'express';
+import cors from 'cors'; // Importa o cors
 import dotenv from 'dotenv';
 import fileUpload from 'express-fileupload';
 import { ensureDirectoryExists } from './fileUtils.js';
@@ -16,11 +18,10 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get('/test', (req, res) => {
-  res.json({ message: "Servidor OK" });
-});
-
-
+// Habilita CORS para permitir requisições de outros domínios
+app.use(cors({
+    origin: '*' // Permite todas as origens; ajuste se precisar de mais restrição
+}));
 
 // Configuração dos diretórios
 const resultsDir = path.join(__dirname, 'Results');
@@ -43,8 +44,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-
-
+// Endpoint de teste
+app.get('/test', (req, res) => {
+  res.json({ message: "Servidor OK" });
+});
 
 // Inicializar o servidor
 app.listen(PORT, () => {

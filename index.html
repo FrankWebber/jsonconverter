@@ -70,33 +70,44 @@
 </div>
 
 <script>
-    document.getElementById("uploadForm").addEventListener("submit", async function(event) {
-      event.preventDefault();
-      
-      const fileInput = document.getElementById("txtFile");
-      if (fileInput.files.length === 0) {
-        alert("Por favor, selecione um arquivo TXT.");
-        return;
-      }
-  
-      const formData = new FormData();
-      formData.append("file", fileInput.files[0]);
-  
-      try {
-        const response = await fetch("/convert_txt", {  // Caminho relativo para compatibilidade em produção e local
-          method: "POST",
-          body: formData
-        });
-  
+  document.getElementById("uploadForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    
+    const fileInput = document.getElementById("txtFile");
+    if (fileInput.files.length === 0) {
+      alert("Por favor, selecione um arquivo TXT.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    try {
+      const response = await fetch("/convert_txt", {  // Caminho relativo para compatibilidade
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const downloadLink = document.createElement("a");
+
+        downloadLink.href = downloadUrl;
+        downloadLink.download = fileInput.files[0].name.replace(".txt", ".json");
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        document.getElementById("response").innerText = "Arquivo convertido com sucesso! O download foi iniciado.";
+      } else {
         const result = await response.json();
-        document.getElementById("response").innerText = response.ok
-          ? `Arquivo convertido com sucesso! Caminho: ${result.jsonFilePath}`
-          : `Erro: ${result.error}`;
-  
-      } catch (error) {
-        document.getElementById("response").innerText = `Erro ao processar a solicitação: ${error.message}`;
+        document.getElementById("response").innerText = `Erro: ${result.error}`;
       }
-    });
+    } catch (error) {
+      document.getElementById("response").innerText = `Erro ao processar a solicitação: ${error.message}`;
+    }
+  });
 </script>
 
 </body>

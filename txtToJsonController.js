@@ -16,7 +16,7 @@ export const processTxtToJsonHandler = async (req, res) => {
 
         const file = req.files.file;
 
-        // Verifica o tipo do arquivo
+        // Valida o tipo do arquivo para aceitar apenas .txt
         if (file.mimetype !== 'text/plain') {
             return res.status(400).json({ error: 'Tipo de arquivo inválido. Apenas arquivos .txt são permitidos.' });
         }
@@ -37,8 +37,15 @@ export const processTxtToJsonHandler = async (req, res) => {
         // Salva o JSON estruturado no arquivo
         fs.writeFileSync(jsonFilePath, JSON.stringify(jsonData, null, 2));
 
-        // Retorna o caminho do arquivo JSON gerado ao cliente
-        res.json({ success: true, jsonFilePath });
+        // Envia o arquivo JSON para download
+        res.download(jsonFilePath, `${path.parse(file.name).name}.json`, (err) => {
+            if (err) {
+                console.error("Erro ao enviar o arquivo para download:", err);
+                res.status(500).json({ error: 'Erro ao enviar o arquivo para download.' });
+            } else {
+                console.log("Arquivo enviado para download com sucesso.");
+            }
+        });
     } catch (error) {
         console.error("Erro ao processar o arquivo:", error);
         res.status(500).json({ error: `Erro ao converter TXT para JSON: ${error.message}` });
